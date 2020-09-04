@@ -2,8 +2,10 @@ package com.example.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import com.google.common.base.Predicate;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -21,17 +23,13 @@ public class SwaggerConfig {
 	@Bean
 	public Docket postsApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.any()).build();
-	}
-
-	private Predicate<String> postPaths() {
-		return or(regex("/item.*"), regex("/Items.*"));
+				.paths(PathSelectors.any()).build().apiInfo(apiInfo());
 	}
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("Ahmed API").description("Ahmed API reference for openlegacy")
-				.contact("ahmadmassalha2@gmail.com").license("Ahmed License").licenseUrl("ahmadmassalha2@gmail.com")
-				.version("1.0").build();
+				.contact("Ahmed massalha, \nEmail: ahmadmassalha2@gmail.com, \nPhone: 0502653577").version("1.0")
+				.build();
 	}
 
 }

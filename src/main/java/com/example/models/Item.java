@@ -6,15 +6,25 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
+
+@Api(description = "Class representing an Item in the application.")
 @Entity
 @Table(name = "item")
 public class Item {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(notes = "The database generated product ID", position = 1)
 	private long itemID;
 
+	@ApiModelProperty(notes = "Item name", position = 2)
 	private String name;
-	private int amount;
+
+	@ApiModelProperty(notes = "Item amount", position = 3)
+	private long amount;
+
+	@ApiModelProperty(notes = "Item inventory code", position = 4)
 	private String inventCode;
 
 	public long getItemID() {
@@ -29,11 +39,11 @@ public class Item {
 		this.name = name;
 	}
 
-	public int getAmount() {
+	public long getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(long amount) {
 		this.amount = amount;
 	}
 
@@ -45,7 +55,7 @@ public class Item {
 		this.inventCode = inventCode;
 	}
 
-	public Item(String name, int amount, String inventCode) {
+	public Item(String name, long amount, String inventCode) {
 		super();
 		this.name = name;
 		this.amount = amount;
@@ -53,7 +63,7 @@ public class Item {
 	}
 
 	public Item() {
-		this.name = name;
+		this.name = "";
 		this.amount = 0;
 	}
 

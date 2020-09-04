@@ -3,8 +3,8 @@ package com.example.services;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.example.models.Item;
@@ -13,7 +13,6 @@ import com.example.repository.itrepo;
 @Service
 
 public class ItemService {
-
 	@Autowired(required = true)
 	itrepo itRepo;
 
@@ -23,11 +22,11 @@ public class ItemService {
 		return items;
 	}
 
-	public Item getSItemById(Long id) {
+	public Object getSItemById(Long id) {
 		// TODO Auto-generated method stub
 		if (itRepo.existsById(id))
 			return itRepo.findById(id).get();
-		return null;
+		return "Item not available in stock";
 	}
 
 	public String delete(Long id) {
@@ -39,14 +38,14 @@ public class ItemService {
 
 	}
 
-	public String add(String name, int amount, String code) {
+	public String add(String name, Long amount, String code) {
 		Item newItem = new Item(name, amount, code);
 		itRepo.save(newItem);
 		return "Item added to stock successfully:\n" + newItem.toString();
 	}
 
-	public String aaddQuantitiy(Long id, int amount) {
-		Item item = getSItemById(id);
+	public String aaddQuantitiy(Long id, long amount) {
+		Item item = (Item) getSItemById(id);
 		if (item != null) {
 			item.setAmount(item.getAmount() + amount);
 			itRepo.save(item);
@@ -55,10 +54,10 @@ public class ItemService {
 		return "Item not available in stock";
 	}
 
-	public String withdrawalQuantity(Long id, int amount) {
-		Item item = getSItemById(id);
+	public String withdrawalQuantity(Long id, long amount) {
+		Item item = (Item) getSItemById(id);
 		if (item != null) {
-			int newAmount = item.getAmount() - amount;
+			long newAmount = item.getAmount() - amount;
 			if (newAmount < 0) {
 				return "Item can't have negative amount!!\n" + item.toString();
 			}
@@ -69,10 +68,10 @@ public class ItemService {
 		return "Item not available in stock";
 	}
 
-	public String withdrawalQuantityDellIf(Long id, int amount) {
-		Item item = getSItemById(id);
+	public String withdrawalQuantityDellIf(Long id, long amount) {
+		Item item = (Item) getSItemById(id);
 		if (item != null) {
-			int newAmount = item.getAmount() - amount;
+			long newAmount = item.getAmount() - amount;
 			if (newAmount < 0) {
 				return "Item can't have negative amount!!\n" + item.toString();
 			}
