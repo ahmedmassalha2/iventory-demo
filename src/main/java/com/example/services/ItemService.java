@@ -29,10 +29,11 @@ public class ItemService {
 		return "Item not available in stock";
 	}
 
-	public String delete(Long id) {
+	public Object delete(Long id) {
 		if (itRepo.existsById(id)) {
+			Item item = (Item) getSItemById(id);
 			itRepo.deleteById(id);
-			return "deleted successfuly";
+			return item;
 		}
 		return "Item not available in stock";
 
