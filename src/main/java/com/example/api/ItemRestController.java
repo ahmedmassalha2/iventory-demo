@@ -4,10 +4,15 @@ import java.util.List;
 import java.util.zip.CheckedInputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.models.Item;
@@ -18,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @Api(value = "Inventory stock", description = "Operations on stock")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ItemRestController {
 	@Autowired(required = true)
 	ItemService itemService;
@@ -60,49 +66,33 @@ public class ItemRestController {
 	}
 
 	// add item to stock
-	@ApiOperation(value = "Add an Item, name, amount , inventory code", response = String.class)
-	@PostMapping(value = "/item/addStock/{name}/{amount}/{code}")
+	@ApiOperation(value = "Add an Item object", response = Object.class)
+	@RequestMapping(value = "/item/addStock", method = RequestMethod.POST)
 
-	private String addItem(@PathVariable("name") String name, @PathVariable("amount") String amount,
-			@PathVariable("code") String code) {
-		if (CheckedInput(amount) == false)
-			return ("Amount must be number");
-		return itemService.add(name, Long.parseLong(amount), code);
+	private Object addItem(@RequestBody Item item, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			return ("error");
+		return itemService.add(item.getName(), (item.getAmount()), item.getInventCode());
 
 	}
 
-	// add quantity to item
-	@PostMapping("/item/depositQuantity/{id}/{amount}")
-	@ApiOperation(value = "deposit Quantity X for item with ID", response = String.class)
-	private String addQuantitiy(@PathVariable("id") String id, @PathVariable("amount") String amount) {
-		if (CheckedInput(id) == false)
-			return ("ID must be number");
-		if (CheckedInput(amount) == false)
-			return ("Amount must be number");
-		return itemService.aaddQuantitiy(Long.parseLong(id), Long.parseLong(amount));
+	@ApiOperation(value = "deposit Quantity X for item with ID\"", response = Object.class)
+	@RequestMapping(value = "/item/depositQuantity", method = RequestMethod.POST)
+
+	private Object addQuantitiy(@RequestBody Item item, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			return "error";
+		return itemService.addQuant(item);
+
 	}
 
 	// remove quantity from specific item
-	@PostMapping("/item/withdrawalQuantity/{id}/{amount}")
-	@ApiOperation(value = "withdrawal Quantity X for item with ID", response = String.class)
-	private String withdrawalQuantity(@PathVariable("id") String id, @PathVariable("amount") String amount) {
-		if (CheckedInput(id) == false)
-			return ("ID must be number");
-		if (CheckedInput(amount) == false)
-			return ("Amount must be number");
-		return itemService.withdrawalQuantity(Long.parseLong(id), Long.parseLong(amount));
-
-	}
-
-	// remove quantity from specific item and delete it if becomes empty
-	@PostMapping("/item/withdrawalQuantityDellIf/{id}/{amount}")
-	@ApiOperation(value = "withdrawal Quantity X for item with ID, Delete item if amount is 0", response = String.class)
-	private String withdrawalQuantityDellIf(@PathVariable("id") String id, @PathVariable("amount") String amount) {
-		if (CheckedInput(id) == false)
-			return ("ID must be number");
-		if (CheckedInput(amount) == false)
-			return ("Amount must be number");
-		return itemService.withdrawalQuantityDellIf(Long.parseLong(id), Long.parseLong(amount));
+	@PostMapping("/item/withdrawalQuantity")
+	@ApiOperation(value = "withdrawal Quantity X for item with ID", response = Object.class)
+	private Object withdrawalQuantity(@RequestBody Item item, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			return ("error");
+		return itemService.withdrawalQuantity(item);
 
 	}
 

@@ -38,51 +38,34 @@ public class ItemService {
 
 	}
 
-	public String add(String name, Long amount, String code) {
+	public Item add(String name, Long amount, String code) {
 		Item newItem = new Item(name, amount, code);
 		itRepo.save(newItem);
-		return "Item added to stock successfully:\n" + newItem.toString();
+		return newItem;
 	}
 
-	public String aaddQuantitiy(Long id, long amount) {
-		Item item = (Item) getSItemById(id);
-		if (item != null) {
-			item.setAmount(item.getAmount() + amount);
-			itRepo.save(item);
-			return item.toString();
+	public Object addQuant(Item item) {
+
+		if (itRepo.existsById(item.getItemID())) {
+			Item item1 = (Item) getSItemById(item.getItemID());
+			item1.setAmount(item1.getAmount() + item.getAmount());
+			itRepo.save(item1);
+			return item1;
 		}
 		return "Item not available in stock";
 	}
 
-	public String withdrawalQuantity(Long id, long amount) {
-		Item item = (Item) getSItemById(id);
-		if (item != null) {
-			long newAmount = item.getAmount() - amount;
-			if (newAmount < 0) {
-				return "Item can't have negative amount!!\n" + item.toString();
-			}
-			item.setAmount(newAmount);
-			itRepo.save(item);
-			return item.toString();
-		}
-		return "Item not available in stock";
-	}
+	public Object withdrawalQuantity(Item item) {
 
-	public String withdrawalQuantityDellIf(Long id, long amount) {
-		Item item = (Item) getSItemById(id);
-		if (item != null) {
-			long newAmount = item.getAmount() - amount;
+		if (itRepo.existsById(item.getItemID())) {
+			Item item1 = (Item) getSItemById(item.getItemID());
+			long newAmount = item1.getAmount() - item.getAmount();
 			if (newAmount < 0) {
-				return "Item can't have negative amount!!\n" + item.toString();
+				return "Item can't have negative amount!!\n";
 			}
-			if (newAmount == 0) {
-				itRepo.delete(item);
-				return "Item with name: " + item.getName() + ", and Id: " + item.getItemID()
-						+ " was withdrawal and deleted";
-			}
-			item.setAmount(newAmount);
-			itRepo.save(item);
-			return item.toString();
+			item1.setAmount(newAmount);
+			itRepo.save(item1);
+			return item1;
 		}
 		return "Item not available in stock";
 	}
