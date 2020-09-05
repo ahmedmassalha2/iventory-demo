@@ -48,20 +48,18 @@ public class ItemRestController {
 
 	// get specific item from stock
 
-	@ApiOperation(value = "Search Item with ID", response = Item.class)
+	@ApiOperation(value = "Search Item with ID", response = Object.class)
 	@GetMapping("/item/{id}")
 	private Object getItem(@PathVariable("id") String id) {
-		if (CheckedInput(id) == false)
-			return ("ID must be number");
+
 		return itemService.getSItemById(Long.parseLong(id));
 	}
 
 	// delete item from stock
 	@DeleteMapping("/item/delete/{id}")
-	@ApiOperation(value = "Delete an item with ID", response = String.class)
-	private String deleteItem(@PathVariable("id") String id) {
-		if (CheckedInput(id) == false)
-			return ("ID must be number");
+	@ApiOperation(value = "Delete an item with ID", response = Object.class)
+	private Object deleteItem(@PathVariable("id") String id) {
+
 		return itemService.delete(Long.parseLong(id));
 	}
 
