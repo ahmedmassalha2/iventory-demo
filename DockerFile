@@ -1,0 +1,4 @@
+FROM openjdk:11
+EXPOSE 8080
+ADD target/inventory-demo-docker.jar inventory-demo-docker.jar 
+ENTRYPOINT ["java","-jar","/inventory-demo-docker.jar"]
